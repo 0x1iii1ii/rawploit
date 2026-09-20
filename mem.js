@@ -391,7 +391,7 @@ function brokenCarrier(why) {
   const die = () => {
     throw new Error(
       "mem: the primitive is disabled -- the promotion failed " +
-        `and its rollback did not verify (${why})`,
+      `and its rollback did not verify (${why})`,
     );
   };
   return {
@@ -430,13 +430,13 @@ function proveMagic(note, who, slot, at, expected, context) {
   note(
     `PAIR-IDENTITY-${who.toUpperCase()}`,
     `at=0x${target.toString()}-found=${record.found}` +
-      `-expected=${record.expected}-pass=${record.pass}-${context}`,
+    `-expected=${record.expected}-pass=${record.pass}-${context}`,
   );
   if (!record.pass)
     throw new Error(
       `mem.promote: ${who} identity failed -- read ` +
-        `${record.found} at 0x${target.toString()}, expected ` +
-        `${record.expected} (${context})`,
+      `${record.found} at 0x${target.toString()}, expected ` +
+      `${record.expected} (${context})`,
     );
   return record;
 }
@@ -447,7 +447,7 @@ export function promoteToRealPair(onEvent) {
     if (typeof onEvent === "function") {
       try {
         onEvent(tag, detail === undefined ? "" : String(detail));
-      } catch {}
+      } catch { }
     }
   };
 
@@ -476,7 +476,7 @@ export function promoteToRealPair(onEvent) {
   )
     throw new TypeError(
       "mem.promote: the fake cell's address is unusable " +
-        `(host=${fake.hostAddress} fake=${fake.fakeAddress})`,
+      `(host=${fake.hostAddress} fake=${fake.fakeAddress})`,
     );
 
   const VECTOR_OFF = profile.vectorOffset;
@@ -495,7 +495,7 @@ export function promoteToRealPair(onEvent) {
     note(
       "PAIR-BEGIN",
       `window=${fake.windowBytes}-vector=+${VECTOR_OFF}` +
-        `-length=+${LENGTH_OFF}-mode=+${MODE_OFF}`,
+      `-length=+${LENGTH_OFF}-mode=+${MODE_OFF}`,
     );
 
     const mainRecord = carrierHeaderCopy();
@@ -516,28 +516,28 @@ export function promoteToRealPair(onEvent) {
     note(
       "PAIR-MAIN-RECORD",
       `home=0x${pairStatus.mainVector.toString()}` +
-        `-record=0x${pairStatus.mainRecordVector.toString()}` +
-        `-len=${pairStatus.mainWindow}-mode=${mainRecord[MODE_OFF]}` +
-        `-sid=0x${(pairStatus.structureID >>> 0).toString(16)}`,
+      `-record=0x${pairStatus.mainRecordVector.toString()}` +
+      `-len=${pairStatus.mainWindow}-mode=${mainRecord[MODE_OFF]}` +
+      `-sid=0x${(pairStatus.structureID >>> 0).toString(16)}`,
     );
 
     if (recordVector !== mainHomeVector)
       throw new Error(
         "mem.promote: profile.vectorOffset disagrees with the " +
-          `recorded home vector (record 0x${pairStatus.mainRecordVector.toString()}` +
-          ` vs home 0x${pairStatus.mainVector.toString()})`,
+        `recorded home vector (record 0x${pairStatus.mainRecordVector.toString()}` +
+        ` vs home 0x${pairStatus.mainVector.toString()})`,
       );
     if (!fake.validate(mainHomeVector) || mainHomeVector % 8 !== 0)
       throw new Error(
         "mem.promote: the recorded home vector is implausible " +
-          `(0x${pairStatus.mainVector.toString()})`,
+        `(0x${pairStatus.mainVector.toString()})`,
       );
 
     if (pairStatus.mainWindow !== fake.windowBytes)
       throw new Error(
         `mem.promote: the record's m_length (${pairStatus.mainWindow})` +
-          ` is not the carrier window (${fake.windowBytes})` +
-          " -- LENGTH_OFF does not hold on main",
+        ` is not the carrier window (${fake.windowBytes})` +
+        " -- LENGTH_OFF does not hold on main",
       );
 
     mainView = fake.view;
@@ -556,8 +556,8 @@ export function promoteToRealPair(onEvent) {
     note(
       "PAIR-FAKE-BUTTERFLY",
       `host=0x${toI64(fake.hostAddress).toString()}` +
-        `-fake=0x${pairStatus.fakeAddress.toString()}` +
-        `-butterfly=0x${pairStatus.fakeButterfly.toString()}`,
+      `-fake=0x${pairStatus.fakeAddress.toString()}` +
+      `-butterfly=0x${pairStatus.fakeButterfly.toString()}`,
     );
 
     workerBuffer = new ArrayBuffer(WORKER_BUFFER_SIZE);
@@ -576,7 +576,7 @@ export function promoteToRealPair(onEvent) {
       if (mainView[MAIN_IDENT_OFFSET + i] !== mainMagic[i])
         throw new Error(
           "mem.promote: main's magic did not read back through " +
-            "its own JS view -- the carrier is not at home",
+          "its own JS view -- the carrier is not at home",
         );
     }
 
@@ -587,7 +587,7 @@ export function promoteToRealPair(onEvent) {
     note(
       "PAIR-CELLS",
       `main=0x${pairStatus.mainAddress.toString()}` +
-        `-worker=0x${pairStatus.workerAddress.toString()}`,
+      `-worker=0x${pairStatus.workerAddress.toString()}`,
     );
     if (mainAddr === workerAddr)
       throw new Error("mem.promote: main and worker leaked the same cell");
@@ -600,8 +600,8 @@ export function promoteToRealPair(onEvent) {
     note(
       "PAIR-MAIN-CELL",
       `fake-m_vector=0x${fromFakeSlot.toString()}` +
-        `-leakval=0x${pairStatus.mainAddress.toString()}` +
-        `-at=0x${toI64(fake.fakeAddress + VECTOR_OFF).toString()}`,
+      `-leakval=0x${pairStatus.mainAddress.toString()}` +
+      `-at=0x${toI64(fake.fakeAddress + VECTOR_OFF).toString()}`,
     );
     if (
       fromFakeSlot.low !== pairStatus.mainAddress.low ||
@@ -609,8 +609,8 @@ export function promoteToRealPair(onEvent) {
     )
       throw new Error(
         "mem.promote: main CELL identity failed -- the fake " +
-          `cell's m_vector slot holds 0x${fromFakeSlot.toString()} but ` +
-          `leakval(mainView) says 0x${pairStatus.mainAddress.toString()}`,
+        `cell's m_vector slot holds 0x${fromFakeSlot.toString()} but ` +
+        `leakval(mainView) says 0x${pairStatus.mainAddress.toString()}`,
       );
 
     proveMagic(
@@ -620,8 +620,8 @@ export function promoteToRealPair(onEvent) {
       mainHomeVector + MAIN_IDENT_OFFSET,
       mainMagic,
       `home=0x${pairStatus.mainVector.toString()}` +
-        `-cell=0x${pairStatus.mainAddress.toString()}` +
-        `-offset=+0x${MAIN_IDENT_OFFSET.toString(16)}`,
+      `-cell=0x${pairStatus.mainAddress.toString()}` +
+      `-offset=+0x${MAIN_IDENT_OFFSET.toString(16)}`,
     );
 
     readInto(workerHeader, workerAddr, PAIR_HEADER_BYTES);
@@ -634,9 +634,9 @@ export function promoteToRealPair(onEvent) {
     note(
       "PAIR-WORKER-HEADER",
       `sid=0x${u32At(workerHeader, 0).toString(16)}` +
-        `-vector=0x${pairStatus.workerVector.toString()}` +
-        `-len=${pairStatus.workerWindow}-mode=${pairStatus.mode}` +
-        `-butterfly=0x${pairStatus.workerButterfly.toString()}`,
+      `-vector=0x${pairStatus.workerVector.toString()}` +
+      `-len=${pairStatus.workerWindow}-mode=${pairStatus.mode}` +
+      `-butterfly=0x${pairStatus.workerButterfly.toString()}`,
     );
 
     const gate =
@@ -657,14 +657,14 @@ export function promoteToRealPair(onEvent) {
     if (!gate)
       throw new Error(
         "mem.promote: header gate failed" +
-          ` worker-len=${pairStatus.workerWindow}` +
-          ` worker-mode=${workerHeader[MODE_OFF]}` +
-          ` main-mode=${mainRecord[MODE_OFF]}` +
-          ` worker-sid=${u32At(workerHeader, 0)}` +
-          ` main-sid=${pairStatus.structureID}` +
-          ` worker-vector=0x${pairStatus.workerVector.toString()}` +
-          ` worker-butterfly=0x${pairStatus.workerButterfly.toString()}` +
-          ` main-home=0x${pairStatus.mainVector.toString()}`,
+        ` worker-len=${pairStatus.workerWindow}` +
+        ` worker-mode=${workerHeader[MODE_OFF]}` +
+        ` main-mode=${mainRecord[MODE_OFF]}` +
+        ` worker-sid=${u32At(workerHeader, 0)}` +
+        ` main-sid=${pairStatus.structureID}` +
+        ` worker-vector=0x${pairStatus.workerVector.toString()}` +
+        ` worker-butterfly=0x${pairStatus.workerButterfly.toString()}` +
+        ` main-home=0x${pairStatus.mainVector.toString()}`,
       );
 
     proveMagic(
@@ -674,8 +674,8 @@ export function promoteToRealPair(onEvent) {
       workerVector + PAIR_IDENT_OFFSET,
       workerMagic,
       `vector=0x${pairStatus.workerVector.toString()}` +
-        `-cell=0x${pairStatus.workerAddress.toString()}` +
-        `-offset=+0x${PAIR_IDENT_OFFSET.toString(16)}`,
+      `-cell=0x${pairStatus.workerAddress.toString()}` +
+      `-offset=+0x${PAIR_IDENT_OFFSET.toString(16)}`,
     );
     note("PAIR-IDENTITY", "main-cell=proved-main-buffer=proved-worker=proved");
 
@@ -687,8 +687,8 @@ export function promoteToRealPair(onEvent) {
     note(
       "PAIR-COMMIT",
       `main=0x${pairStatus.mainAddress.toString()}` +
-        `-worker=0x${pairStatus.workerAddress.toString()}` +
-        "-next=aim-without-restore",
+      `-worker=0x${pairStatus.workerAddress.toString()}` +
+      "-next=aim-without-restore",
     );
     aimFor(workerAddr, PAIR_HEADER_BYTES);
     committed = true;
@@ -700,12 +700,12 @@ export function promoteToRealPair(onEvent) {
     if (pairStatus.workerLength !== WORKER_LENGTH_MAX)
       throw new Error(
         "mem.promote: the m_length write did not land -- " +
-          `worker.length reads ${pairStatus.workerLength}`,
+        `worker.length reads ${pairStatus.workerLength}`,
       );
     if (workerMirror.length !== WORKER_BUFFER_SIZE)
       throw new Error(
         "mem.promote: the mirror was widened too -- the write " +
-          "went somewhere structural, not to worker's m_length",
+        "went somewhere structural, not to worker's m_length",
       );
     if (workerView[0] !== HOME_BYTE)
       throw new Error("mem.promote: worker no longer sees its own buffer");
@@ -727,7 +727,7 @@ export function promoteToRealPair(onEvent) {
     note(
       "PAIR-WIDENED",
       `length=0x${WORKER_LENGTH_MAX.toString(16)}` +
-        `-mode=0x${pairStatus.mode.toString(16)}`,
+      `-mode=0x${pairStatus.mode.toString(16)}`,
     );
 
     pairVectorOffset = VECTOR_OFF;
@@ -738,7 +738,7 @@ export function promoteToRealPair(onEvent) {
     if (!sameBytes(identityBytes, workerMagic, 8))
       throw new Error(
         "mem.promote: read through the pair returned " +
-          `${hexOf(identityBytes, 8)}, expected ${hexOf(workerMagic, 8)}`,
+        `${hexOf(identityBytes, 8)}, expected ${hexOf(workerMagic, 8)}`,
       );
     write8(workerVector + PAIR_IDENT_OFFSET, new int64(0x0d0c0b0a, 0x04030201));
     const back = [0x0a, 0x0b, 0x0c, 0x0d, 0x01, 0x02, 0x03, 0x04];
@@ -756,8 +756,8 @@ export function promoteToRealPair(onEvent) {
     if (!pairStatus.leakvalAgrees)
       throw new Error(
         "mem.promote: leakval through the pair disagrees " +
-          `(0x${toI64(workerAgain).toString()} vs ` +
-          `0x${pairStatus.workerAddress.toString()})`,
+        `(0x${toI64(workerAgain).toString()} vs ` +
+        `0x${pairStatus.workerAddress.toString()})`,
       );
 
     const mv = read8(mainAddr + VECTOR_OFF);
@@ -767,14 +767,14 @@ export function promoteToRealPair(onEvent) {
     )
       throw new Error(
         `mem.promote: main.m_vector reads 0x${mv.toString()},` +
-          ` expected worker's cell 0x${pairStatus.workerAddress.toString()}`,
+        ` expected worker's cell 0x${pairStatus.workerAddress.toString()}`,
       );
     if (read4(mainAddr + LENGTH_OFF) !== fake.windowBytes)
       throw new Error("mem.promote: main's own m_length was disturbed");
     note(
       "PAIR-REPROVED",
       `main-m_vector=0x${mv.toString()}` +
-        `-leakval=0x${toI64(workerAgain).toString()}`,
+      `-leakval=0x${toI64(workerAgain).toString()}`,
     );
 
     note("PAIR-RELEASE", "next=release-fake-cell-and-debris");
@@ -794,12 +794,12 @@ export function promoteToRealPair(onEvent) {
     note(
       "PAIR-UP",
       `main=0x${pairStatus.mainAddress.toString()}` +
-        `-worker=0x${pairStatus.workerAddress.toString()}` +
-        `-home=0x${pairStatus.mainVector.toString()}` +
-        `-mode=0x${pairStatus.mode.toString(16)}` +
-        `-sid=0x${pairStatus.structureID.toString(16)}` +
-        `-released=${pairStatus.released.length}` +
-        `-history-cleared=${pairStatus.historyCleared}`,
+      `-worker=0x${pairStatus.workerAddress.toString()}` +
+      `-home=0x${pairStatus.mainVector.toString()}` +
+      `-mode=0x${pairStatus.mode.toString(16)}` +
+      `-sid=0x${pairStatus.structureID.toString(16)}` +
+      `-released=${pairStatus.released.length}` +
+      `-history-cleared=${pairStatus.historyCleared}`,
     );
     return pairStatus;
   } catch (error) {
@@ -861,9 +861,9 @@ export function promoteToRealPair(onEvent) {
     note(
       "PAIR-FALLBACK",
       `state=${pairStatus.state}` +
-        `-committed=${committed}-rollback-clean=${pairStatus.rollbackClean}` +
-        `-main-at-home=${pairStatus.mainAtHome}` +
-        `-at=${pairStatus.failedAt}-${pairStatus.error}`,
+      `-committed=${committed}-rollback-clean=${pairStatus.rollbackClean}` +
+      `-main-at-home=${pairStatus.mainAtHome}` +
+      `-at=${pairStatus.failedAt}-${pairStatus.error}`,
     );
     throw error;
   }
@@ -902,8 +902,8 @@ export function installWindowP(c, options) {
       globalThis.p = undefined;
       throw new Error(
         "mem: the promotion failed AND its rollback did not " +
-          "verify -- window.p has been WITHDRAWN rather than published " +
-          `mis-aimed. failedAt=${pairStatus.failedAt} ${pairStatus.error}`,
+        "verify -- window.p has been WITHDRAWN rather than published " +
+        `mis-aimed. failedAt=${pairStatus.failedAt} ${pairStatus.error}`,
       );
     }
   }
